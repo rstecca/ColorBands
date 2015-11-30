@@ -42,9 +42,12 @@ public class ColorBandEditor : Editor {
 		if(GUILayout.Button("Save as image"))
 		{
             string saveFileName = EditorUtility.SaveFilePanelInProject("Save ColorBand as PNG", _target.name, "png", "Please enter a filename to save the ColorBand to");
-			_target.rebuildPreviewTexture();
-			byte[] bytes = _target.previewTexture.EncodeToPNG();
-            System.IO.File.WriteAllBytes(saveFileName, bytes);
+            if (saveFileName != "")
+            {
+                _target.rebuildPreviewTexture();
+                byte[] bytes = _target.previewTexture.EncodeToPNG();
+                System.IO.File.WriteAllBytes(saveFileName, bytes);
+            }
 		}
 		EditorGUILayout.EndHorizontal();
 
@@ -65,7 +68,7 @@ public class ColorBandEditor : Editor {
 		int i=0;
 		while(System.IO.File.Exists("Assets/" + newfname + ".asset") && i<1000)
 		{
-			newfname = new System.Text.StringBuilder(newfnameRoot).Append(" ").Append(i.ToString("D" + 3)).ToString();
+			newfname = new System.Text.StringBuilder(newfnameRoot).Append(" ").Append(i.ToString("D" + 3)).ToString();  
 			i++;
 		}
 		newCB.name = newfname;
