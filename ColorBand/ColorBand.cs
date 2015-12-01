@@ -9,13 +9,11 @@ public class ColorBand : ScriptableObject {
 	public AnimationCurve GCurve;
 	public AnimationCurve BCurve;
 
-	//[SerializeField][HideInInspector]
 	public Texture2D previewTexture;
-	//[HideInInspector]
-	//public Texture2D previewTexture { get { return _previewTexture; } }
+    public bool biggerPreview = false;
 
-	int Wt = 128;
-	int Ht = 8;
+	int Wt = 128, Wt_big = 256;
+	int Ht = 8, Ht_big = 8;
 
 	public ColorBand()
 	{
@@ -37,8 +35,10 @@ public class ColorBand : ScriptableObject {
 		// This can happen on load project and other cases
 		if(previewTexture == null)
 		{
-			previewTexture = new Texture2D(Wt, Ht);
-//			Debug.LogError("Texture is null");
+            if(biggerPreview)
+                previewTexture = new Texture2D(Wt_big, Ht_big);
+            else
+			    previewTexture = new Texture2D(Wt, Ht);
 		}
 
 		int W = previewTexture.width;

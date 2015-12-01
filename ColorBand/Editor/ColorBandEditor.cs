@@ -9,13 +9,25 @@ public class ColorBandEditor : Editor {
 	{
 		ColorBand _target = (ColorBand)target;
 
+        bool previousBiggerPreviewToggle = _target.biggerPreview;
+
 		if(_target.previewTexture == null)
 		{
 			_target.rebuildPreviewTexture();
 		}
 
         EditorGUILayout.BeginVertical();
-        GUILayout.Label("Preview");
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Preview", GUILayout.Width(100f));
+        GUILayout.Label("(bigger", GUILayout.Width(60f));
+        _target.biggerPreview = EditorGUILayout.Toggle(_target.biggerPreview, GUILayout.MaxWidth(10f));
+        GUILayout.Label(")", GUILayout.Width(8f));
+        if (previousBiggerPreviewToggle != _target.biggerPreview)
+        {
+            _target.previewTexture = null;
+            _target.rebuildPreviewTexture();
+        }
+        EditorGUILayout.EndHorizontal();
         GUILayout.Label(_target.previewTexture);
         EditorGUILayout.BeginHorizontal();
 		_target.name = EditorGUILayout.TextField("Name", _target.name);
