@@ -5,7 +5,7 @@ No support for alpha channels **yet**.
 
 ![Screenshot_01.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/screenshot_01.png)
 
-**Examples of color bands you cannot obtain with Unity**
+**Examples of color bands you cannot obtain with Unity's Gradient**
 
 ![You cannot do this with Unity 01](https://raw.githubusercontent.com/rstecca/ColorBands/master/Images/CannotDoThisWithGradients%2001.png)
 
