@@ -7,10 +7,12 @@ public class ColorBandEditor : Editor {
 
 	public override void OnInspectorGUI ()
 	{
+		// get the target class
 		ColorBand _target = (ColorBand)target;
 
         bool previousBiggerPreviewToggle = _target.biggerPreview;
 
+		// the preview texture leaks at non deterministic times in the editor so we have to watch it
 		if(_target.previewTexture == null)
 		{
 			_target.rebuildPreviewTexture();
@@ -22,6 +24,7 @@ public class ColorBandEditor : Editor {
         GUILayout.Label("(bigger", GUILayout.Width(60f));
         _target.biggerPreview = EditorGUILayout.Toggle(_target.biggerPreview, GUILayout.MaxWidth(10f));
         GUILayout.Label(")", GUILayout.Width(8f));
+		// force to rebuild texture when switching to bigger and back
         if (previousBiggerPreviewToggle != _target.biggerPreview)
         {
             _target.previewTexture = null;
@@ -31,6 +34,7 @@ public class ColorBandEditor : Editor {
         GUILayout.Label(_target.previewTexture);
         EditorGUILayout.BeginHorizontal();
 		_target.name = EditorGUILayout.TextField("Name", _target.name);
+		// Get filename of the colorband and set its name with the resulting string
         if (GUILayout.Button("Set as filename", GUILayout.MaxWidth(110f)))
         {
             string[] pathParts = (AssetDatabase.GetAssetPath(_target)).Split('/');
@@ -38,12 +42,15 @@ public class ColorBandEditor : Editor {
             _target.name = assetName;
         }
         EditorGUILayout.EndHorizontal();
-        GUI.contentColor = new Color(1f, .4f, .4f);
+		// Curve controls
+        GUI.contentColor = new Color (1f, .4f, .4f);
 		_target.RCurve = EditorGUILayout.CurveField("Red Curve", _target.RCurve);
-        GUI.contentColor =  new Color(.4f, 1f, .4f);
+        GUI.contentColor =  new Color (.4f, 1f, .4f);
 		_target.GCurve = EditorGUILayout.CurveField("Green Curve", _target.GCurve);
-        GUI.contentColor = new Color(.4f, .4f, 1f);
+        GUI.contentColor = new Color (.4f, .4f, 1f);
 		_target.BCurve = EditorGUILayout.CurveField("Blue Curve", _target.BCurve);
+		GUI.contentColor = new Color (.8f, .8f, .8f);
+		_target.ACurve = EditorGUILayout.CurveField("Alpha Curve", _target.ACurve);
         EditorGUILayout.EndVertical();
 
         GUI.contentColor = Color.white;
@@ -63,6 +70,7 @@ public class ColorBandEditor : Editor {
 		}
 		EditorGUILayout.EndHorizontal();
 
+		// When GUI changes save the ColorBand and rebuild the texture.
 		if(GUI.changed)
 		{
 			AssetDatabase.SaveAssets();
