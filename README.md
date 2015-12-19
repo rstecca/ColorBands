@@ -26,7 +26,7 @@ Color bands are used in all kinds of applications in data visualization and othe
 
 ![Screenshot_05.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/Screenshot_05.png)
 
-**With new support for alpha channel**
+*(With new support for alpha channel)*
 
 ![Screenshot_06.PNG](https://raw.githubusercontent.com/rstecca/ColorBands/master/Images/Screenshot_06.png)
 
