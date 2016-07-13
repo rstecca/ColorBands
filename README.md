@@ -20,15 +20,11 @@ Color bands are used in all kinds of applications in data visualization and othe
 
 ![Screenshot_02.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/Screenshot_02.png)
 
-2) **Change its name and its red, green and blue color curves to obtain the desired effect**
+2) **Change its name and its red, green, blue and alpha curves to obtain the desired effect**. You can hit *Set as filename* to quickly set the name from the new color band's filename.
 
 ![Screenshot_03.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/Screenshot_03.png)
 
 ![Screenshot_05.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/Screenshot_05.png)
-
-*(With new support for alpha channel)*
-
-![Screenshot_06.PNG](https://raw.githubusercontent.com/rstecca/ColorBands/master/Images/Screenshot_06.png)
 
 3) **Declare a public ColorBand variable in your script**
 
