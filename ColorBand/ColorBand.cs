@@ -18,17 +18,24 @@ public class ColorBand : ScriptableObject {
 
 	public ColorBand()
 	{
-		previewTexture = new Texture2D(Wt, Ht);
+#if !UNITY_5_3_OR_NEWER
+        previewTexture = new Texture2D(Wt, Ht);
+#endif
 		RCurve = AnimationCurve.Linear(timeStart:0f, valueStart:0f, timeEnd:1f, valueEnd:1f);
 		GCurve = AnimationCurve.Linear(timeStart:0f, valueStart:0f, timeEnd:1f, valueEnd:1f);
 		BCurve = AnimationCurve.Linear(timeStart:0f, valueStart:0f, timeEnd:1f, valueEnd:1f);
 		ACurve = AnimationCurve.Linear(timeStart:0f, valueStart:1f, timeEnd:1f, valueEnd:1f); // Initialized as constant to 1f
 
+#if !UNITY_5_3_OR_NEWER
 		buildPreviewTexture();
+#endif
 	}
 
 	void OnEnable()
 	{
+#if UNITY_5_3_OR_NEWER
+        previewTexture = new Texture2D(Wt, Ht);
+#endif
 		buildPreviewTexture();
 	}
 
@@ -53,11 +60,10 @@ public class ColorBand : ScriptableObject {
 
 		Color bgColor = Color.black;
 
+
 		for(int i=0; i<W; i++)
 		{
-            // Get time corresponding to the current position i
 			float t = Mathf.Clamp01(((float)i)/((float)W));
-            // Get the color by evaluating all the curves
 			Color c = new Color(
 				RCurve.Evaluate( t ),
 				GCurve.Evaluate( t ),
@@ -65,38 +71,35 @@ public class ColorBand : ScriptableObject {
 				ACurve.Evaluate( t )
 				);
 
-            // To optimize the drawing a bit we only draw 1st and 4th lines (and every 4th potentially).
-            // We do this because we have to draw the checkboard underneath which can be crunched to just 2 different lines.
-            // Later we propagate those lines to the next 3.
+			if(c.a<0.99f)
+			{
+				for(int j=0; j<H; j++)
+				{
+					//if((i*j)%8<4)// Curious logo-like pattern :)
+					if((i%8 ^ j%8) < 4)
+						bgColor = Color.grey;
+					else
+						bgColor = Color.black;
 
-            // set preview's pixel on the 1st line. Also blend with a checkboard color
-            if ((i % 8) < 4)
-                bgColor = Color.grey;
-            else
-                bgColor = Color.black;
-            colors[i] = c * (c.a) + bgColor * (1f - c.a);
+					colors[i+j*W] = c * (c.a) + bgColor * (1f-c.a);
+				}
+			}
+			else // Save some computation. Best tradeoff when alpha is not used (and is constant 1f)
+			{
+				for(int j=0; j<H; j++)
+				{
+					colors[i+j*W] = c;
+				}
+			}
 
-            // set preview's pixel on the 4th line. Also blend with a checkboard color
-            if ((i % 8) >= 4)
-                bgColor = Color.grey;
-            else
-                bgColor = Color.black;
-            colors[i + W*4] = c * (c.a) + bgColor * (1f - c.a);
 		}
 
-        // Propagate pixels from 1st and every 4th line of pixels to the following lines of lixels
-        // We use the power of Array.Copy to save CPU
-        for (int L = 0; L < H; L+=4)
-        {
-            for (int l = 0; l < 4; l++)
-            {
-                if((L%8) < 4)
-                    System.Array.Copy(colors, 0, colors, L * W + l * W, W);
-                else
-                    System.Array.Copy(colors, W*4, colors, L * W + l * W, W);
-            }
-
-        }
+		// old code that copied the first lines to all the other ones.
+		// This cannot be done with alpha because we have to draw the background texture.
+//		for(int j=1; j<H; j++)
+//		{
+//			System.Array.Copy(colors, 0, colors, j*W, W);
+//		}
 
 		previewTexture.SetPixels(0,0,W, H, colors);
 		previewTexture.Apply();
