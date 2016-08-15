@@ -13,6 +13,11 @@ public class ColorBand : ScriptableObject {
 	public Texture2D previewTexture;
     public bool biggerPreview = false;
 
+    public bool discrete = false;
+    public int discreteSteps = 16;
+    public enum DISCRETE_METHOD { LEFT_VALUE, RIGHT_VALUE, CENTER_VALUE };
+    public DISCRETE_METHOD discreteMethod = DISCRETE_METHOD.LEFT_VALUE;
+
 	int Wt = 128, Wt_big = 256;
 	int Ht = 8, Ht_big = 8;
 
@@ -64,6 +69,16 @@ public class ColorBand : ScriptableObject {
 		for(int i=0; i<W; i++)
 		{
 			float t = Mathf.Clamp01(((float)i)/((float)W));
+            if(discrete)
+            {
+                if (discreteMethod == DISCRETE_METHOD.LEFT_VALUE)
+                    t = Mathf.Floor(t * discreteSteps) / discreteSteps;
+                else if (discreteMethod == DISCRETE_METHOD.RIGHT_VALUE)
+                    t = Mathf.Ceil(t * discreteSteps) / discreteSteps;
+                else if (discreteMethod == DISCRETE_METHOD.CENTER_VALUE)
+                    t = 0.5f * (Mathf.Floor(t * discreteSteps) / discreteSteps + Mathf.Ceil(t * discreteSteps) / discreteSteps);
+            }
+
 			Color c = new Color(
 				RCurve.Evaluate( t ),
 				GCurve.Evaluate( t ),
@@ -112,7 +127,22 @@ public class ColorBand : ScriptableObject {
 
 	public Color Evaluate(float time01)
 	{
-		return new Color(RCurve.Evaluate(time01), GCurve.Evaluate(time01), BCurve.Evaluate(time01));
+        if(!discrete)
+        {
+            return new Color(RCurve.Evaluate(time01), GCurve.Evaluate(time01), BCurve.Evaluate(time01));
+        }
+        else
+        {
+            float t = -1f;
+            if (discreteMethod == DISCRETE_METHOD.LEFT_VALUE)
+                t = Mathf.Floor(time01 * discreteSteps) / discreteSteps;
+            else if (discreteMethod == DISCRETE_METHOD.RIGHT_VALUE)
+                t = Mathf.Ceil(time01 * discreteSteps) / discreteSteps;
+            else if (discreteMethod == DISCRETE_METHOD.CENTER_VALUE)
+                t = 0.5f * (Mathf.Floor(time01 * discreteSteps) / discreteSteps + Mathf.Ceil(time01 * discreteSteps) / discreteSteps);
+            return new Color(RCurve.Evaluate(t), GCurve.Evaluate(t), BCurve.Evaluate(t));
+        }
+
 	}
 
 }

@@ -10,6 +10,8 @@ public class ColorBandEditor : Editor {
 		// get the target class
 		ColorBand _target = (ColorBand)target;
 
+        Undo.RecordObject(_target, "Color Band Change");
+
         bool previousBiggerPreviewToggle = _target.biggerPreview;
 
 		// the preview texture leaks at non deterministic times in the editor so we have to watch it
@@ -57,6 +59,19 @@ public class ColorBandEditor : Editor {
 
 		EditorGUILayout.Space();
 
+
+        EditorGUILayout.BeginHorizontal();
+        _target.discrete = EditorGUILayout.Toggle("Discrete", _target.discrete);
+        if (_target.discrete)
+        {
+            _target.discreteSteps = EditorGUILayout.IntSlider("Steps", _target.discreteSteps, 2, 256);
+        }
+        EditorGUILayout.EndHorizontal();
+        if(_target.discrete)
+        {
+            _target.discreteMethod = (ColorBand.DISCRETE_METHOD)EditorGUILayout.EnumPopup("Discretization Method", _target.discreteMethod);
+        }
+
 		EditorGUILayout.BeginHorizontal();
 		if(GUILayout.Button("Save as image"))
 		{
@@ -88,7 +103,7 @@ public class ColorBandEditor : Editor {
 		int i=0;
 		while(System.IO.File.Exists("Assets/" + newfname + ".asset") && i<1000)
 		{
-			newfname = new System.Text.StringBuilder(newfnameRoot).Append(" ").Append(i.ToString("D" + 3)).ToString();  
+			newfname = new System.Text.StringBuilder(newfnameRoot).Append(" ").Append(i.ToString("D" + 3)).ToString();
 			i++;
 		}
 		newCB.name = newfname;
