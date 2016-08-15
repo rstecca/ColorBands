@@ -1,3 +1,6 @@
+# New Feature: discretization
+15/08/2016 Now you can have discrete bands and set the subdivision steps.
+
 # ColorBands
 Unity 3D's *Gradient* data type allows you to set maximum 8 color keys. *ColorBand* data type has a different editor that doesn't suffer this limitation and is still easy to use. You can create your own ColorBands, store them and access them from code with an *Evaluate* method to get the color at time t, as for *Gradient*. RGB values are determined by curves, allowing a better control over how the color function evolves between your points.
 Color bands are used in all kinds of applications in data visualization and other fields.
@@ -31,3 +34,14 @@ Color bands are used in all kinds of applications in data visualization and othe
 5) **Use it in code by calling the *ColorBand.Evaluate(float t)* method** where t is a floating point value between 0 and 1.
 
 ![Screenshot_04.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/Screenshot_04.png)
+
+## Discretization
+A ColorBand can be discretized which means it will be turned into a set of flat intervals that will return a constant color.
+To make a ColorBand discrete just set its discrete toggle to true and decide the number of steps the ColorBand will be subdivided into. This will result in discrete bands like the following:
+
+![Discrete02.png](https://github.com/rstecca/ColorBands/blob/master/Images/Discrete02.png)
+
+Three different discretization methods are available:
+- LEFT_VALUE will build color intervals by evaluating the color at their left extreme.
+- RIGHT_VALUE will build color intervals by evaluating the color at their right extreme.
+- CENTER_VALUE will build color intervals by evaluating the color at their center.
