@@ -1,5 +1,5 @@
 # New Feature: discretization
-15/08/2016 Now you can have discrete bands and set the subdivision steps.
+15/08/2016 ColorBand now supports discretization which subdivides the ColorBand into constant intervals.
 
 # ColorBands
 Unity 3D's *Gradient* data type allows you to set maximum 8 color keys. *ColorBand* data type has a different editor that doesn't suffer this limitation and is still easy to use. You can create your own ColorBands, store them and access them from code with an *Evaluate* method to get the color at time t, as for *Gradient*. RGB values are determined by curves, allowing a better control over how the color function evolves between your points.
