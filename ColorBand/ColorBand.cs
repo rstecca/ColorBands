@@ -10,6 +10,9 @@ public class ColorBand : ScriptableObject {
 	public AnimationCurve BCurve;
 	public AnimationCurve ACurve;
 
+    public enum COLORSPACE { RGB, HSV };
+    public COLORSPACE colorSpace = COLORSPACE.RGB;
+
 	public Texture2D previewTexture;
     public bool biggerPreview = false;
 
@@ -43,6 +46,33 @@ public class ColorBand : ScriptableObject {
 #endif
 		buildPreviewTexture();
 	}
+
+    Color GetColorAt(float t, bool useAlpha = false, COLORSPACE _colorSpace = COLORSPACE.RGB)
+    {
+        if (_colorSpace == COLORSPACE.RGB)
+        {
+            if (useAlpha)
+            {
+                return new Color(RCurve.Evaluate(t), GCurve.Evaluate(t), BCurve.Evaluate(t), ACurve.Evaluate(t));
+            }
+            else
+            {
+                return new Color(RCurve.Evaluate(t), GCurve.Evaluate(t), BCurve.Evaluate(t));
+            }
+        }
+        else // if(_colorSpace == COLORSPACE.HSV)
+        {
+            if (useAlpha)
+            {
+                Color ac = Color.HSVToRGB(RCurve.Evaluate(t), GCurve.Evaluate(t), BCurve.Evaluate(t));
+                return new Color(ac.r, ac.g, ac.b, ACurve.Evaluate(t));
+            }
+            else
+            {
+                return Color.HSVToRGB(RCurve.Evaluate(t), GCurve.Evaluate(t), BCurve.Evaluate(t));
+            }
+        }
+    }
 
 	/// <summary>
 	/// Builds the preview texture.
@@ -79,12 +109,7 @@ public class ColorBand : ScriptableObject {
                     t = 0.5f * (Mathf.Floor(t * discreteSteps) / discreteSteps + Mathf.Ceil(t * discreteSteps) / discreteSteps);
             }
 
-			Color c = new Color(
-				RCurve.Evaluate( t ),
-				GCurve.Evaluate( t ),
-				BCurve.Evaluate( t ),
-				ACurve.Evaluate( t )
-				);
+            Color c = GetColorAt( t, useAlpha:true, _colorSpace:colorSpace);
 
 			if(c.a<0.99f)
 			{
@@ -140,7 +165,7 @@ public class ColorBand : ScriptableObject {
                 t = Mathf.Ceil(time01 * discreteSteps) / discreteSteps;
             else if (discreteMethod == DISCRETE_METHOD.CENTER_VALUE)
                 t = 0.5f * (Mathf.Floor(time01 * discreteSteps) / discreteSteps + Mathf.Ceil(time01 * discreteSteps) / discreteSteps);
-            return new Color(RCurve.Evaluate(t), GCurve.Evaluate(t), BCurve.Evaluate(t));
+            return GetColorAt(t, false, colorSpace);
         }
 
 	}

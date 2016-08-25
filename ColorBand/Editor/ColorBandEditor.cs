@@ -44,14 +44,21 @@ public class ColorBandEditor : Editor {
             _target.name = assetName;
         }
         EditorGUILayout.EndHorizontal();
+
+        //Color Space
+        _target.colorSpace = (ColorBand.COLORSPACE) EditorGUILayout.EnumPopup("Color Space", _target.colorSpace);
+
 		// Curve controls
         GUI.contentColor = new Color (1f, .4f, .4f);
-		_target.RCurve = EditorGUILayout.CurveField("Red Curve", _target.RCurve);
+        string rcurvename = (_target.colorSpace == ColorBand.COLORSPACE.RGB) ? "Red Curve" : "Hue Curve";
+		_target.RCurve = EditorGUILayout.CurveField(rcurvename, _target.RCurve);
         GUI.contentColor =  new Color (.4f, 1f, .4f);
-		_target.GCurve = EditorGUILayout.CurveField("Green Curve", _target.GCurve);
+        string gcurvename = (_target.colorSpace == ColorBand.COLORSPACE.RGB) ? "Green Curve" : "Saturation Curve";
+		_target.GCurve = EditorGUILayout.CurveField(gcurvename, _target.GCurve);
         GUI.contentColor = new Color (.4f, .4f, 1f);
-		_target.BCurve = EditorGUILayout.CurveField("Blue Curve", _target.BCurve);
-		GUI.contentColor = new Color (.8f, .8f, .8f);
+        string bcurvename = (_target.colorSpace == ColorBand.COLORSPACE.RGB) ? "Blue Curve" : "Value Curve";
+		_target.BCurve = EditorGUILayout.CurveField(bcurvename, _target.BCurve);
+		GUI.contentColor = new Color (.85f, .85f, .95f);
 		_target.ACurve = EditorGUILayout.CurveField("Alpha Curve", _target.ACurve);
         EditorGUILayout.EndVertical();
 
