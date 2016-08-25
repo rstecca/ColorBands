@@ -1,5 +1,6 @@
 # New Feature: discretization
 25/08/2016 ColorBand now supports HSV input. Documentation to be updated soon.
+
 15/08/2016 ColorBand now supports discretization which subdivides the ColorBand into constant intervals.
 
 # ColorBands
