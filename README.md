@@ -1,5 +1,5 @@
-# New Feature: discretization
-25/08/2016 ColorBand now supports HSV input. Documentation to be updated soon.
+# New Features
+25/08/2016 [Feature request] Color spaces. ColorBand now supports HSV input. Documentation to be updated soon.
 
 15/08/2016 ColorBand now supports discretization which subdivides the ColorBand into constant intervals.
 
@@ -23,7 +23,9 @@ Color bands are used in all kinds of applications in data visualization and othe
 
 ![Screenshot_02.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/Screenshot_02.png)
 
-2) **Change its name and its red, green, blue and alpha curves to obtain the desired effect**. You can hit *Set as filename* to quickly set the name from the new color band's filename.
+Newly created ColorBands will be placed in Assets folder's root.
+
+2) **Change its name and its red, green, blue and alpha curves to obtain the desired effect**. You can hit *Set as filename* to quickly set the name from the new color band's filename. Note that curves' values should remain between 0 and 1 in both dimensions *time* and *value*.
 
 ![Screenshot_03.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/Screenshot_03.png)
 
@@ -47,3 +49,11 @@ Three different discretization methods are available:
 - LEFT_VALUE will build color intervals by evaluating the color at their left extreme.
 - RIGHT_VALUE will build color intervals by evaluating the color at their right extreme.
 - CENTER_VALUE will build color intervals by evaluating the color at their center.
+
+## Color Space
+
+![ColorCpace.png](https://github.com/rstecca/ColorBands/blob/master/Images/ColorSpace.png)
+
+ColorBands can be described in the two main, standard color spaces RGB and HSV. By default a ColorBand will be set to RGB. When changing color space all the curves remain unvaried but they represent the respective values of the two spaces so that when switching to HSV, the first curve becomes hue, the second one saturation and the third one value. The alpha curve has the same meaning in both color spaces.
+
+![HSVExample.png](https://github.com/rstecca/ColorBands/blob/master/Images/HSVExample.png)
