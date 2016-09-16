@@ -1,5 +1,5 @@
 # New Features
-25/08/2016 [Feature request] Color spaces. ColorBand now supports HSV input. Documentation to be updated soon.
+25/08/2016 [Feature request] Color spaces. ColorBand now supports HSV input.
 
 15/08/2016 ColorBand now supports discretization which subdivides the ColorBand into constant intervals.
 
