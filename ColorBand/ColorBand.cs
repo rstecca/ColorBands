@@ -74,10 +74,10 @@ public class ColorBand : ScriptableObject {
         }
     }
 
-	/// <summary>
-	/// Builds the preview texture.
-	/// </summary>
-	void buildPreviewTexture()
+    /// <summary>
+    /// Builds the preview texture.
+    /// </summary>
+    void buildPreviewTexture()
 	{
 		// This can happen on load project and other cases
 		if(previewTexture == null)
@@ -150,11 +150,17 @@ public class ColorBand : ScriptableObject {
 		buildPreviewTexture();
 	}
 
+    /// <summary>
+    /// Evaluates color curves at time time01
+    /// </summary>
+    /// <param name="time01">The time point where the color is computed. Value must be between 0 and 1.</param>
+    /// <returns>The color in the current color space.</returns>
 	public Color Evaluate(float time01)
 	{
         if(!discrete)
         {
-            return new Color(RCurve.Evaluate(time01), GCurve.Evaluate(time01), BCurve.Evaluate(time01));
+            //return new Color(RCurve.Evaluate(time01), GCurve.Evaluate(time01), BCurve.Evaluate(time01)); // HSV FIX
+            return GetColorAt(time01, false, colorSpace);
         }
         else
         {
