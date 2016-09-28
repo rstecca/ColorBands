@@ -4,8 +4,8 @@
 15/08/2016 ColorBand now supports discretization which subdivides the ColorBand into constant intervals.
 
 # ColorBands
-Unity 3D's *Gradient* data type allows you to set maximum 8 color keys. *ColorBand* data type has a different editor that doesn't suffer this limitation and is still easy to use. You can create your own ColorBands, store them and access them from code with an *Evaluate* method to get the color at time t, as for *Gradient*. RGB values are determined by curves, allowing a better control over how the color function evolves between your points.
-Color bands are used in all kinds of applications in data visualization and other fields.
+Unity 3D's *Gradient* is a handy data type but comes with some limitations: for example you cannot set more than 8 color keys in its editor and RGB is the only color space available. *ColorBand* data type offers an alternative with less limitations. Creating ColorBands is fun and easy; they are stored as assets and can be accessed from code through an *Evaluate* method to get the color at time t, as for *Gradient*. RGB (or HSV) values are described by individual curves, allowing a better control over how the color function evolves between your points.
+Color bands are used in all kinds of applications including games, data visualization and other fields.
 
 ![Screenshot_01.PNG](https://github.com/rstecca/ColorBands/blob/master/Images/screenshot_01.png)
 
