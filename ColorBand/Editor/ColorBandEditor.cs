@@ -85,9 +85,10 @@ public class ColorBandEditor : Editor {
             string saveFileName = EditorUtility.SaveFilePanelInProject("Save ColorBand as PNG", _target.name, "png", "Please enter a filename to save the ColorBand to");
             if (saveFileName != "")
             {
-                _target.rebuildPreviewTexture();
+                _target.rebuildPreviewTexture(true); // rebuild the texture but without the alpha pattern
                 byte[] bytes = _target.previewTexture.EncodeToPNG();
                 System.IO.File.WriteAllBytes(saveFileName, bytes);
+                _target.rebuildPreviewTexture(); // restore the texture with alpha pattern
             }
 		}
 		EditorGUILayout.EndHorizontal();

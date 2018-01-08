@@ -77,7 +77,7 @@ public class ColorBand : ScriptableObject {
     /// <summary>
     /// Builds the preview texture.
     /// </summary>
-    void buildPreviewTexture()
+    void buildPreviewTexture(bool noAlphaPattern = false)
 	{
 		// This can happen on load project and other cases
 		if(previewTexture == null)
@@ -111,7 +111,7 @@ public class ColorBand : ScriptableObject {
 
             Color c = GetColorAt( t, useAlpha:true, _colorSpace:colorSpace);
 
-			if(c.a<0.99f)
+			if(c.a<0.99f && noAlphaPattern == false)
 			{
 				for(int j=0; j<H; j++)
 				{
@@ -145,9 +145,9 @@ public class ColorBand : ScriptableObject {
 		previewTexture.Apply();
 	}
 
-	public void rebuildPreviewTexture()
+	public void rebuildPreviewTexture(bool noAlphaPattern = false)
 	{
-		buildPreviewTexture();
+        buildPreviewTexture(noAlphaPattern);
 	}
 
     /// <summary>
