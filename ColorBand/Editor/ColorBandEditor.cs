@@ -89,6 +89,21 @@ public class ColorBandEditor : Editor {
                 byte[] bytes = _target.previewTexture.EncodeToPNG();
                 System.IO.File.WriteAllBytes(saveFileName, bytes);
                 _target.rebuildPreviewTexture(); // restore the texture with alpha pattern
+
+                string saveFileAbsPath = System.IO.Directory.GetParent(Application.dataPath).ToString() + "/" + saveFileName;
+                if (!System.IO.File.Exists(saveFileAbsPath))
+                    Debug.LogWarning("File not found: " + saveFileAbsPath);
+                TextureImporter TI = (TextureImporter)TextureImporter.GetAtPath(saveFileAbsPath);
+                //if (System.IO.File.Exists(System.IO.Directory.GetParent(Application.dataPath).ToString() + "/" + saveFileName))
+                //    Debug.Log("FILE CHECK");
+
+                AssetDatabase.ImportAsset(saveFileAbsPath, ImportAssetOptions.ForceUpdate);
+                TI.textureCompression = TextureImporterCompression.Uncompressed;
+                //TI.textureFormat = TextureImporterFormat.ARGB32;
+                //TI.textureType = TextureImporterType.Default;
+                TI.wrapMode = TextureWrapMode.Clamp;
+                TI.alphaIsTransparency = true;
+                TI.SaveAndReimport();
             }
 		}
 		EditorGUILayout.EndHorizontal();
