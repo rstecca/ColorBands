@@ -49,8 +49,8 @@ public class ColorBandEditor : Editor {
         EditorGUILayout.Space();
         EditorGUILayout.Space();
         EditorGUILayout.Space();
-        GUILayout.Label(_target.previewTexture);
-        EditorGUILayout.ColorField(new Color(0f,0f,0.5f));
+        //GUILayout.Label(_target.previewTexture);
+        //EditorGUILayout.ColorField(new Color(0f,0f,0.5f));
 
         EditorGUILayout.BeginHorizontal();
 
@@ -111,8 +111,13 @@ public class ColorBandEditor : Editor {
 		}
 		EditorGUILayout.EndHorizontal();
 
-		// When GUI changes save the ColorBand and rebuild the texture.
-		if(GUI.changed)
+#if UNITY_5
+        EditorGUILayout.Space();
+        EditorGUILayout.HelpBox("Warning: In Unity 5 there's some color inconsistency between preview and actual evaluated vaules. See Known Issues at https://github.com/rstecca/ColorBands/ for further details.", MessageType.Warning);
+#endif
+
+        // When GUI changes save the ColorBand and rebuild the texture.
+        if(GUI.changed)
 		{
 			AssetDatabase.SaveAssets();
 			EditorUtility.SetDirty(_target);
