@@ -49,6 +49,8 @@ public class ColorBand : ScriptableObject {
 
     Color GetColorAt(float t, bool useAlpha = false, COLORSPACE _colorSpace = COLORSPACE.RGB)
     {
+        //UnityEngine.Assertions.Assert.IsTrue(t >= 0f && t <= 1f, "t is out of [0..1] range");
+
         if (_colorSpace == COLORSPACE.RGB)
         {
             if (useAlpha)
@@ -77,19 +79,21 @@ public class ColorBand : ScriptableObject {
     /// <summary>
     /// Builds the preview texture.
     /// </summary>
-    void buildPreviewTexture(bool noAlphaPattern = false)
+    void buildPreviewTexture()
 	{
 		// This can happen on load project and other cases
 		if(previewTexture == null)
 		{
             if(biggerPreview)
-                previewTexture = new Texture2D(Wt_big, Ht_big);
+                previewTexture = new Texture2D(Wt_big, Ht_big, TextureFormat.RGBA32, false);
             else
-			    previewTexture = new Texture2D(Wt, Ht);
+			    previewTexture = new Texture2D(Wt, Ht, TextureFormat.RGBA32, false);
 		}
 
 		int W = previewTexture.width;
 		int H = previewTexture.height;
+        previewTexture.wrapMode = TextureWrapMode.Clamp;
+        previewTexture.filterMode = FilterMode.Point;
 
 		Color[] colors = new Color[W*H];
 
@@ -111,26 +115,32 @@ public class ColorBand : ScriptableObject {
 
             Color c = GetColorAt( t, useAlpha:true, _colorSpace:colorSpace);
 
-			if(c.a<0.99f && noAlphaPattern == false)
-			{
-				for(int j=0; j<H; j++)
-				{
-					//if((i*j)%8<4)// Curious logo-like pattern :)
-					if((i%8 ^ j%8) < 4)
-						bgColor = Color.grey;
-					else
-						bgColor = Color.black;
+            for (int j = 0; j < H; j++)
+            {
+                colors[i + j * W] = c;
+            }
 
-					colors[i+j*W] = c * (c.a) + bgColor * (1f-c.a);
-				}
-			}
-			else // Save some computation. Best tradeoff when alpha is not used (and is constant 1f)
-			{
-				for(int j=0; j<H; j++)
-				{
-					colors[i+j*W] = c;
-				}
-			}
+            // ALPHA BACKGROUND RENDERING WAS TRANSFERRED TO EDITOR
+   //         if (c.a<0.99f)
+			//{
+			//	for(int j=0; j<H; j++)
+			//	{
+			//		//if((i*j)%8<4)// Curious logo-like pattern :)
+			//		if((i%8 ^ j%8) < 4)
+			//			bgColor = Color.grey;
+			//		else
+			//			bgColor = Color.black;
+
+			//		colors[i+j*W] = c * (c.a) + bgColor * (1f-c.a);
+			//	}
+			//}
+			//else // Save some computation. Best tradeoff when alpha is not used (and is constant 1f)
+			//{
+			//	for(int j=0; j<H; j++)
+			//	{
+			//		colors[i+j*W] = c;
+			//	}
+			//}
 
 		}
 
@@ -145,9 +155,9 @@ public class ColorBand : ScriptableObject {
 		previewTexture.Apply();
 	}
 
-	public void rebuildPreviewTexture(bool noAlphaPattern = false)
+	public void rebuildPreviewTexture()
 	{
-        buildPreviewTexture(noAlphaPattern);
+		buildPreviewTexture();
 	}
 
     /// <summary>

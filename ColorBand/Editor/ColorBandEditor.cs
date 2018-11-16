@@ -5,6 +5,8 @@ using UnityEditor;
 [CustomEditor(typeof(ColorBand))]
 public class ColorBandEditor : Editor {
 
+    public static Texture2D alphaPatternTexture;
+
 	public override void OnInspectorGUI ()
 	{
 		// get the target class
@@ -13,6 +15,9 @@ public class ColorBandEditor : Editor {
         Undo.RecordObject(_target, "Color Band Change");
 
         bool previousBiggerPreviewToggle = _target.biggerPreview;
+
+        if (alphaPatternTexture == null)
+            InitAlphaBackgroundPattern();
 
 		// the preview texture leaks at non deterministic times in the editor so we have to watch it
 		if(_target.previewTexture == null)
@@ -23,7 +28,7 @@ public class ColorBandEditor : Editor {
         EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Preview", GUILayout.Width(100f));
-        GUILayout.Label("(bigger", GUILayout.Width(60f));
+        GUILayout.Label("(high precision preview", GUILayout.Width(150f));
         _target.biggerPreview = EditorGUILayout.Toggle(_target.biggerPreview, GUILayout.MaxWidth(10f));
         GUILayout.Label(")", GUILayout.Width(8f));
 		// force to rebuild texture when switching to bigger and back
@@ -33,8 +38,22 @@ public class ColorBandEditor : Editor {
             _target.rebuildPreviewTexture();
         }
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space();
+        Rect r = GUILayoutUtility.GetLastRect();
+        r.height = 32f;
+        GUI.DrawTextureWithTexCoords(r, alphaPatternTexture, new Rect(0, 0, r.width * .5f / alphaPatternTexture.width, r.height * .5f / alphaPatternTexture.height));
+        GUI.DrawTexture(r, _target.previewTexture, ScaleMode.StretchToFill, true);
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
         GUILayout.Label(_target.previewTexture);
+        EditorGUILayout.ColorField(new Color(0f,0f,0.5f));
+
         EditorGUILayout.BeginHorizontal();
+
 		_target.name = EditorGUILayout.TextField("Name", _target.name);
 		// Get filename of the colorband and set its name with the resulting string
         if (GUILayout.Button("Set as filename", GUILayout.MaxWidth(110f)))
@@ -85,10 +104,9 @@ public class ColorBandEditor : Editor {
             string saveFileName = EditorUtility.SaveFilePanelInProject("Save ColorBand as PNG", _target.name, "png", "Please enter a filename to save the ColorBand to");
             if (saveFileName != "")
             {
-                _target.rebuildPreviewTexture(true); // rebuild the texture but without the alpha pattern
+                _target.rebuildPreviewTexture();
                 byte[] bytes = _target.previewTexture.EncodeToPNG();
                 System.IO.File.WriteAllBytes(saveFileName, bytes);
-                _target.rebuildPreviewTexture(); // restore the texture with alpha pattern
             }
 		}
 		EditorGUILayout.EndHorizontal();
@@ -122,5 +140,34 @@ public class ColorBandEditor : Editor {
 
 		Selection.activeObject = newCB;
 	}
+
+    private void InitAlphaBackgroundPattern()
+    {
+        // GENERATE ALPHA BACKGROUND PATTERN
+        if (alphaPatternTexture == null)
+        {
+            alphaPatternTexture = new Texture2D(8, 8);
+            int w = alphaPatternTexture.width;
+            int h = alphaPatternTexture.height;
+            Color bgColor;
+            Color[] colors = new Color[w * h];
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    if ((i % 8 ^ j % 8) < 4)
+                        bgColor = Color.grey;
+                    else
+                        bgColor = Color.black;
+
+                    colors[i + j * w] = bgColor;
+                }
+            }
+            alphaPatternTexture.SetPixels(colors);
+            alphaPatternTexture.wrapMode = TextureWrapMode.Repeat;
+            alphaPatternTexture.filterMode = FilterMode.Bilinear;
+            alphaPatternTexture.Apply();
+        }
+    }
 
 }
