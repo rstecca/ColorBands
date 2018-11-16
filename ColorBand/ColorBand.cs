@@ -115,43 +115,43 @@ public class ColorBand : ScriptableObject {
 
             Color c = GetColorAt( t, useAlpha:true, _colorSpace:colorSpace);
 
-            for (int j = 0; j < H; j++)
-            {
-                colors[i + j * W] = c;
-            }
+            //for (int j = 0; j < 1; j++)
+            //{
+            //    colors[i + j * W] = c;
+            //}
+            colors[i] = c;
 
             // ALPHA BACKGROUND RENDERING WAS TRANSFERRED TO EDITOR
-   //         if (c.a<0.99f)
-			//{
-			//	for(int j=0; j<H; j++)
-			//	{
-			//		//if((i*j)%8<4)// Curious logo-like pattern :)
-			//		if((i%8 ^ j%8) < 4)
-			//			bgColor = Color.grey;
-			//		else
-			//			bgColor = Color.black;
+            //         if (c.a<0.99f)
+            //{
+            //	for(int j=0; j<H; j++)
+            //	{
+            //		//if((i*j)%8<4)// Curious logo-like pattern :)
+            //		if((i%8 ^ j%8) < 4)
+            //			bgColor = Color.grey;
+            //		else
+            //			bgColor = Color.black;
 
-			//		colors[i+j*W] = c * (c.a) + bgColor * (1f-c.a);
-			//	}
-			//}
-			//else // Save some computation. Best tradeoff when alpha is not used (and is constant 1f)
-			//{
-			//	for(int j=0; j<H; j++)
-			//	{
-			//		colors[i+j*W] = c;
-			//	}
-			//}
+            //		colors[i+j*W] = c * (c.a) + bgColor * (1f-c.a);
+            //	}
+            //}
+            //else // Save some computation. Best tradeoff when alpha is not used (and is constant 1f)
+            //{
+            //	for(int j=0; j<H; j++)
+            //	{
+            //		colors[i+j*W] = c;
+            //	}
+            //}
 
-		}
+        }
 
-		// old code that copied the first lines to all the other ones.
-		// This cannot be done with alpha because we have to draw the background texture.
-//		for(int j=1; j<H; j++)
-//		{
-//			System.Array.Copy(colors, 0, colors, j*W, W);
-//		}
+        // Optimization: copies 1st line to all others efficiently
+        for (int j = 1; j < H; j++)
+        {
+            System.Array.Copy(colors, 0, colors, j * W, W);
+        }
 
-		previewTexture.SetPixels(0,0,W, H, colors);
+        previewTexture.SetPixels(0,0,W, H, colors);
 		previewTexture.Apply();
 	}
 
