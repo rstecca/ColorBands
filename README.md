@@ -58,3 +58,6 @@ Three different discretization methods are available:
 ColorBands can be described in the two main, standard color spaces RGB and HSV. By default a ColorBand will be set to RGB. When changing color space all the curves remain unvaried but they represent the respective values of the two spaces so that when switching to HSV, the first curve becomes hue, the second one saturation and the third one value. The alpha curve has the same meaning in both color spaces.
 
 ![HSVExample.png](https://github.com/rstecca/ColorBands/blob/master/Images/HSVExample.png)
+
+## Known Issues
+1. In Unity 5.6.4 and likely in other subversions of Unity 5, there's color inconsistency between the preview in the inspector and the actual evaluated values. This can be seen when exporting the ColorBand to PNG. A good case to look at is the ColorBand called 'Red to Blue', included in the repo. The issue seems to have been solved as in Unity 2017 and 2018 this doesn't happen.
