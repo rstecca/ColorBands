@@ -48,7 +48,7 @@ public class ColorBandEditor : Editor {
         EditorGUILayout.Space();
         Rect r = GUILayoutUtility.GetLastRect();
         r.height = 32f;
-        GUI.DrawTextureWithTexCoords(r, alphaPatternTexture, new Rect(0, 0, r.width * .5f / alphaPatternTexture.width, r.height * .5f / alphaPatternTexture.height));
+        GUI.DrawTextureWithTexCoords(r, alphaPatternTexture, new Rect(0, 0, r.width * .75f / alphaPatternTexture.width, r.height * .75f / alphaPatternTexture.height));
         GUI.DrawTexture(r, _target.previewTexture, ScaleMode.StretchToFill, true);
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -174,6 +174,8 @@ public class ColorBandEditor : Editor {
             alphaPatternTexture = new Texture2D(8, 8);
             int w = alphaPatternTexture.width;
             int h = alphaPatternTexture.height;
+            Color patternColor1 = new Color(.75f, .75f, .75f); // BRIGHT
+            Color patternColor2 = new Color(.5f, .5f, .5f); // DARK
             Color bgColor;
             Color[] colors = new Color[w * h];
             for (int i = 0; i < w; i++)
@@ -181,9 +183,9 @@ public class ColorBandEditor : Editor {
                 for (int j = 0; j < h; j++)
                 {
                     if ((i % 8 ^ j % 8) < 4)
-                        bgColor = Color.grey;
+                        bgColor = patternColor1;
                     else
-                        bgColor = Color.black;
+                        bgColor = patternColor2;
 
                     colors[i + j * w] = bgColor;
                 }
