@@ -135,7 +135,7 @@ public class ColorBandEditor : Editor {
                 _target.applyRequired = false;
             }
             GUI.color = guiColor;
-            EditorGUILayout.HelpBox("Applying is needed to make changes persistent.", MessageType.Warning);
+            EditorGUILayout.HelpBox("Applying is required to make changes persistent.", MessageType.Warning);
         }
 
 #if UNITY_5
