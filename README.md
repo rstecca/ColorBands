@@ -1,7 +1,8 @@
 # New Features
-25/08/2016 [Feature request] Color spaces. ColorBand now supports HSV input.
 
-15/08/2016 ColorBand now supports discretization which subdivides the ColorBand into constant intervals.
+19/11/2018: better preview, improved input method and preview update performance.
+
+**Please note that whilst images in this documentation are still OK for reference they are not up to date and they will updated as soon as possible.**
 
 # ColorBands
 Unity 3D's *Gradient* is a handy data type but comes with some limitations: for example you cannot set more than 8 color keys in its editor and RGB is the only color space available. *ColorBand* data type offers an alternative with less limitations. Creating ColorBands is fun and easy; they are stored as assets and can be accessed from code through an *Evaluate* method to get the color at time t, as for *Gradient*. RGB (or HSV) values are described by individual curves, allowing a better control over how the color function evolves between your points.
