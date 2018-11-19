@@ -6,7 +6,6 @@ using UnityEditor;
 public class ColorBandEditor : Editor {
 
     public static Texture2D alphaPatternTexture;
-    private bool applyRequired { get; set; }
 
     Color guiColor, guiContentColor, guiBackgroundColor;
 
@@ -122,10 +121,10 @@ public class ColorBandEditor : Editor {
         if(GUI.changed)
 		{
             _target.rebuildPreviewTexture();
-            applyRequired = true;
+            _target.applyRequired = true;
 		}
 
-        if(applyRequired)
+        if(_target.applyRequired)
         {
             GUI.color = new Color(1f, .4f, 0f);
             if(GUILayout.Button("Apply"))
@@ -133,9 +132,10 @@ public class ColorBandEditor : Editor {
                 AssetDatabase.SaveAssets();
                 EditorUtility.SetDirty(_target);
                 _target.rebuildPreviewTexture();
-                applyRequired = false;
+                _target.applyRequired = false;
             }
             GUI.color = guiColor;
+            EditorGUILayout.HelpBox("Applying is needed to make changes persistent.", MessageType.Warning);
         }
 
 #if UNITY_5

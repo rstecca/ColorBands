@@ -13,6 +13,8 @@ public class ColorBand : ScriptableObject {
     public enum COLORSPACE { RGB, HSV };
     public COLORSPACE colorSpace = COLORSPACE.RGB;
 
+    public bool applyRequired { get; set; } // Apply button in inspector
+
 	public Texture2D previewTexture;
     public bool biggerPreview = false;
 
