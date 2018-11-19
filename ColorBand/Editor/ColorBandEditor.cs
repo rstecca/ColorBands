@@ -6,9 +6,16 @@ using UnityEditor;
 public class ColorBandEditor : Editor {
 
     public static Texture2D alphaPatternTexture;
+    private bool applyRequired { get; set; }
+
+    Color guiColor, guiContentColor, guiBackgroundColor;
 
 	public override void OnInspectorGUI ()
 	{
+        guiColor = GUI.color;
+        guiContentColor = GUI.contentColor;
+        guiBackgroundColor = GUI.backgroundColor;
+
 		// get the target class
 		ColorBand _target = (ColorBand)target;
 
@@ -81,7 +88,7 @@ public class ColorBandEditor : Editor {
 		_target.ACurve = EditorGUILayout.CurveField("Alpha Curve", _target.ACurve);
         EditorGUILayout.EndVertical();
 
-        GUI.contentColor = Color.white;
+        GUI.contentColor = guiColor;
 
 		EditorGUILayout.Space();
 
@@ -111,21 +118,34 @@ public class ColorBandEditor : Editor {
 		}
 		EditorGUILayout.EndHorizontal();
 
+        // When GUI changes save the ColorBand and rebuild the texture.
+        if(GUI.changed)
+		{
+            _target.rebuildPreviewTexture();
+            applyRequired = true;
+		}
+
+        if(applyRequired)
+        {
+            GUI.color = new Color(1f, .4f, 0f);
+            if(GUILayout.Button("Apply"))
+            {
+                AssetDatabase.SaveAssets();
+                EditorUtility.SetDirty(_target);
+                _target.rebuildPreviewTexture();
+                applyRequired = false;
+            }
+            GUI.color = guiColor;
+        }
+
 #if UNITY_5
         EditorGUILayout.Space();
         EditorGUILayout.HelpBox("Warning: In Unity 5 there's some color inconsistency between preview and actual evaluated vaules. See Known Issues at https://github.com/rstecca/ColorBands/ for further details.", MessageType.Warning);
 #endif
 
-        // When GUI changes save the ColorBand and rebuild the texture.
-        if(GUI.changed)
-		{
-			AssetDatabase.SaveAssets();
-			EditorUtility.SetDirty(_target);
-			_target.rebuildPreviewTexture();
-		}
-	}
+    }
 
-	[MenuItem("Assets/Create/Color Band")]
+    [MenuItem("Assets/Create/Color Band")]
 	public static void CreateColorBand()
 	{
 		ColorBand newCB = ScriptableObject.CreateInstance<ColorBand>();
