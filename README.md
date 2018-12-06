@@ -4,7 +4,7 @@
 
 06/12/2018: inspector testing tools: Sample Test allows to quickly test the color resulting from a [0..1] value.
 
-**Please note that whilst images in this documentation are still OK for reference they are not up to date and they will updated as soon as possible.**
+**Please note that whilst images in this documentation are still OK for reference they are not up to date and they will be updated as soon as possible.**
 
 # ColorBands
 Unity 3D's *Gradient* is a handy data type but comes with some limitations: for example you cannot set more than 8 color keys in its editor and RGB is the only color space available. *ColorBand* data type offers an alternative with less limitations. Creating ColorBands is fun and easy; they are stored as assets and can be accessed from code through an *Evaluate* method to get the color at time t, as for *Gradient*. RGB (or HSV) values are described by individual curves, allowing a better control over how the color function evolves between your points.
@@ -61,5 +61,6 @@ ColorBands can be described in the two main, standard color spaces RGB and HSV. 
 
 ![HSVExample.png](https://github.com/rstecca/ColorBands/blob/master/Images/HSVExample.png)
 
-## Known Issues
+# Known Issues
 1. In Unity 5.6.4 and likely in other subversions of Unity 5, there's color inconsistency between the preview in the inspector and the actual evaluated values. This can be seen when exporting the ColorBand to PNG. A good case to look at is the ColorBand called 'Red to Blue', included in the repo. The issue seems to have been solved as in Unity 2017 and 2018 this doesn't happen.
+2. In Testing Tools > Sample, the color in the box is not initialized with it's real value at zero. It falls back to black instead.
