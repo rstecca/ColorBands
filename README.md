@@ -1,6 +1,7 @@
 # New Features
 
 19/11/2018: better preview, improved input method and preview update performance.
+06/12/2018: inspector testing tools: Sample Test allows to quickly test the color resulting from a [0..1] value.
 
 **Please note that whilst images in this documentation are still OK for reference they are not up to date and they will updated as soon as possible.**
 
