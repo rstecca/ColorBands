@@ -8,6 +8,11 @@ public class ColorBandEditor : Editor {
     public static Texture2D alphaPatternTexture;
 
     Color guiColor, guiContentColor, guiBackgroundColor;
+    
+    // TESTING FIELDS
+    bool m_testingFoldout;
+    float m_test_time_sample;
+    Color m_test_out_color;
 
 	public override void OnInspectorGUI ()
 	{
@@ -138,6 +143,11 @@ public class ColorBandEditor : Editor {
             EditorGUILayout.HelpBox("Applying is required to make changes persistent.", MessageType.Warning);
         }
 
+        if(m_testingFoldout = EditorGUILayout.Foldout(m_testingFoldout, "Testing Tools"))
+        {
+            DebugSample();
+        }
+
 #if UNITY_5
         EditorGUILayout.Space();
         EditorGUILayout.HelpBox("Warning: In Unity 5 there's some color inconsistency between preview and actual evaluated vaules. See Known Issues at https://github.com/rstecca/ColorBands/ for further details.", MessageType.Warning);
@@ -165,6 +175,32 @@ public class ColorBandEditor : Editor {
 
 		Selection.activeObject = newCB;
 	}
+
+
+    public void DebugSample()
+    {
+        ColorBand _target = (ColorBand)target;
+        EditorGUILayout.LabelField("Sample", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal();
+        serializedObject.Update();
+        EditorGUI.BeginChangeCheck();
+        m_test_time_sample = EditorGUILayout.Slider(m_test_time_sample, 0f, 1f);
+        if (EditorGUI.EndChangeCheck())
+        {
+            m_test_out_color = _target.Evaluate(m_test_time_sample);
+        }
+        serializedObject.ApplyModifiedProperties();
+        EditorGUILayout.ColorField(m_test_out_color, GUILayout.MaxWidth(100f));
+        EditorGUILayout.EndHorizontal();
+
+        // Further infos
+        //EditorGUILayout.BeginHorizontal();
+        //EditorGUILayout.LabelField(
+        //    string.Format("R {0:0.000}\t{1:000}\t{2:X}\nG {3:0.000}\t{4:000}\t{5:X}\nB {6:0.000}\t{7:000}\t{8:X}\nA {9:0.000}\t{10:000}\t{11:X}", m_test_out_color.r, m_test_out_color.r*255, (System.Byte)(m_test_out_color.r*255), m_test_out_color.g, m_test_out_color.g * 255, (System.Byte)(m_test_out_color.g * 255), m_test_out_color.b, m_test_out_color.b * 255, (System.Byte)(m_test_out_color.b * 255), m_test_out_color.a, m_test_out_color.a * 255, (System.Byte)(m_test_out_color.a * 255))
+        //    , EditorStyles.helpBox, GUILayout.MaxWidth(160f));
+        //EditorGUILayout.EndHorizontal();
+
+    }
 
     private void InitAlphaBackgroundPattern()
     {
