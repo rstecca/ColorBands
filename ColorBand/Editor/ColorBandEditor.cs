@@ -8,6 +8,11 @@ public class ColorBandEditor : Editor {
     public static Texture2D alphaPatternTexture;
 
     Color guiColor, guiContentColor, guiBackgroundColor;
+    
+    // TESTING FIELDS
+    bool m_testingFoldout;
+    float m_test_time_sample;
+    Color m_test_out_color;
 
 	public override void OnInspectorGUI ()
 	{
@@ -138,6 +143,11 @@ public class ColorBandEditor : Editor {
             EditorGUILayout.HelpBox("Applying is required to make changes persistent.", MessageType.Warning);
         }
 
+        if(m_testingFoldout = EditorGUILayout.Foldout(m_testingFoldout, "Testing Tools"))
+        {
+            DebugSample();
+        }
+
 #if UNITY_5
         EditorGUILayout.Space();
         EditorGUILayout.HelpBox("Warning: In Unity 5 there's some color inconsistency between preview and actual evaluated vaules. See Known Issues at https://github.com/rstecca/ColorBands/ for further details.", MessageType.Warning);
@@ -165,6 +175,22 @@ public class ColorBandEditor : Editor {
 
 		Selection.activeObject = newCB;
 	}
+
+
+    public void DebugSample()
+    {
+        ColorBand _target = (ColorBand)target;
+        EditorGUILayout.LabelField("Sample", EditorStyles.boldLabel);
+        serializedObject.Update();
+        EditorGUI.BeginChangeCheck();
+        m_test_time_sample = EditorGUILayout.Slider(m_test_time_sample, 0f, 1f);
+        EditorGUILayout.LabelField("R" + m_test_out_color.r + " G" + m_test_out_color.g + " B" + m_test_out_color.b);
+        if (EditorGUI.EndChangeCheck())
+        {
+            m_test_out_color = _target.Evaluate(m_test_time_sample);
+        }
+        serializedObject.ApplyModifiedProperties();
+    }
 
     private void InitAlphaBackgroundPattern()
     {
